@@ -1,0 +1,32 @@
+meta {
+  name: Update book
+  type: http
+  seq: 5
+}
+
+put {
+  url: http://localhost:3000/books/:id
+  body: json
+  auth: inherit
+}
+
+params:path {
+  id: 7
+}
+
+body:json {
+  {
+      "title": "Harry Potter y el legado maldito",
+      "author": "J.K. Rowling",
+      "rating": 3,
+      "pageCount": 368,
+      "summary": "Ser Harry Potter nunca ha sido tarea fácil, menos aún desde que se ha convertido en un ocupadísimo empleado del Ministerio de Magia, un hombre casado y padre de tres hijos. Mientras Harry planta cara a un pasado que se resiste a quedar atrás, su hijo menor, Albus, ha de luchar contra el peso de una herencia familiar de la que él nunca ha querido saber nada. Cuando el destino conecte el pasado con el presente, padre e hijo deberán afrontar una verdad muy incómoda: a veces, la oscuridad surge de los lugares más insospechados.",
+      "imageUrl": "https://images.cdn3.buscalibre.com/fit-in/360x360/d6/ce/d6ce234ed843060c346d58decd4167ca.jpg",
+      "available": true
+    }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
