@@ -1,11 +1,13 @@
-import { User } from "../models/User";
+import { User } from "../models/User.js";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 export const registerUser = async (req, res) => {
   const { userName, email, password } = req.body;
 
   const user = await User.findOne({
     where: {
-      email
+      email,
     }
   });
 
@@ -26,4 +28,4 @@ export const registerUser = async (req, res) => {
   });
 
   res.json(newUser.id);
-}
+};

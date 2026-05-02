@@ -1,11 +1,10 @@
 import express from "express";
-
 import { PORT } from "./config.js";
 import { sequelize } from "../db.js";
-
-import "./models/Book.js";
-
 import bookRoutes from "./routes/books.routes.js";
+import authRoutes from "./routes/auth.routes.js";
+import "./models/Book.js";
+import "./models/User.js"
 
 const app = express();
 
@@ -17,14 +16,15 @@ try {
         res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
         next();
     });
+
+    app.use(bookRoutes);
+    app.use(authRoutes);
     
     app.listen(PORT);
-    app.use(bookRoutes);
 
     await sequelize.sync();
 
-    console.log(`Server escuchando en puerto ${PORT}`);
-    
+    console.log(`Servidor escuchando en el puerto ${PORT}`);
 } catch (error) {
     console.log(`Hubo un error en la inicialización`);
 }
