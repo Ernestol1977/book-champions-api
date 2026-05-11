@@ -1,9 +1,15 @@
 import { User } from "../models/User.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { validateLoginUser } from "../helpers/validations.js";
 
 export const loginUser = async (req, res) => {
   const { email, password } = req.body;
+
+  const result = validateLoginUser(req.body);
+
+  if (result.error)
+    return res.status(400).send({ message: result.message });
 
   const user = await User.findOne({
     where: {
@@ -22,7 +28,7 @@ export const loginUser = async (req, res) => {
       .send({ message: "Email y/o contraseña incorrecta" });
 
   // Generate token
-  const secretKey = "programacion3-2025";
+  const secretKey = "programacion-2026";
 
   const token = jwt.sign({ email }, secretKey, { expiresIn: "1h" });
 
