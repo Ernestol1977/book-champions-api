@@ -1,31 +1,33 @@
 import { User } from "../models/User.js";
 import bcrypt from "bcrypt";
-// import jwt from "jsonwebtoken";
+import { validateRegisterUser } from "../helpers/validations.js";
 
 export const registerUser = async (req, res) => {
-  const { userName, email, password } = req.body;
+    const result = validateRegisterUser(req.body);
 
-  const user = await User.findOne({
-    where: {
-      email,
-    }
-  });
+    if (result.error) return res.status(400).send({ message: result.message });
+    
+    const { userName, email, password } = req.body;
 
-  if (user)
-    return res.status(400).send({ message: "Usuario existente" });
-  
-  // Hash the password
-  const saltRounds = 10;
+    const user = await User.findOne({
+        where: {
+            email,
+        },
+    });
 
-  const salt = await bcrypt.genSalt(saltRounds);
+    if (user) return res.status(400).send({ message: "Usuario existente" });
 
-  const hashedPassword = await bcrypt.hash(password, salt);
+    // Hash the password
+    const saltRound = 10;
+    const salt = await bcrypt.genSalt(saltRound);
 
-  const newUser = await User.create({
-    name: userName,
-    email,
-    password: hashedPassword,
-  });
+    const hashedPassword = await bcrypt.hash(password, salt);
 
-  res.json(newUser.id);
+    const newUser = await User.create({
+        name: userName,
+        email,
+        password: hashedPassword,
+    });
+
+    res.json(newUser.id);
 };

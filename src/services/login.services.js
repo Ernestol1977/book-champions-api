@@ -4,33 +4,30 @@ import jwt from "jsonwebtoken";
 import { validateLoginUser } from "../helpers/validations.js";
 
 export const loginUser = async (req, res) => {
-  const { email, password } = req.body;
+    const result = validateLoginUser(req.body);
 
-  const result = validateLoginUser(req.body);
+    if (result.error) return res.status(400).send({ message: result.message });
 
-  if (result.error)
-    return res.status(400).send({ message: result.message });
+    const { email, password } = req.body;
+    const user = await User.findOne({
+        where: {
+            email,
+        },
+    });
 
-  const user = await User.findOne({
-    where: {
-      email,
-    },
-  });
+    if (!user) return res.status(401).send({ message: "Usuario no existente" });
 
-  if (!user)
-    return res.status(401).send({ message: "Usuario no existente" });
+    const comparison = await bcrypt.compare(password, user.password);
 
-  const comparison = await bcrypt.compare(password, user.password);
+    if (!comparison)
+        return res
+            .status(401)
+            .send({ message: "Email y/o contraseña incorrecta" });
 
-  if (!comparison)
-    return res
-      .status(401)
-      .send({ message: "Email y/o contraseña incorrecta" });
+    // Generate token
+    const secretKey = "programacion2026";
 
-  // Generate token
-  const secretKey = "programacion-2026";
+    const token = jwt.sign({ email }, secretKey, { expiresIn: "1h" });
 
-  const token = jwt.sign({ email }, secretKey, { expiresIn: "1h" });
-
-  return res.json(token);
+    return res.json(token);
 };

@@ -7,9 +7,14 @@ meta {
 get {
   url: http://localhost:3000/books
   body: none
-  auth: inherit
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImVybmVzdG9AZ21haWwuY29tIiwiaWF0IjoxNzc4ODgwNTI4LCJleHAiOjE3Nzg4ODQxMjh9.pdhRpFIIDDhNFGpy2Bq_Me3-wBEAV35_qcN3dYrD7sI
 }
 
 settings {
   encodeUrl: true
+  timeout: 0
 }
